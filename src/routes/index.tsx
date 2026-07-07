@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app-shell";
 import { useLocalStorage, type Agendamento, type Movimento, type Config } from "@/lib/storage";
 import { brl } from "@/lib/format";
-import { ArrowDownRight, ArrowUpRight, CalendarClock, PiggyBank, TrendingUp, Wallet } from "lucide-react";
+import { exportarRelatorioMensal } from "@/lib/pdf-report";
+import { ArrowDownRight, ArrowUpRight, CalendarClock, Download, PiggyBank, TrendingUp, Wallet } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Dashboard });
 
@@ -74,11 +76,22 @@ function Dashboard() {
         title="Painel"
         subtitle="Visão do mês corrente — entradas, saídas e distribuição de lucro."
         action={
-          <Link to="/agendamentos">
-            <Button className="bg-primary hover:bg-primary/90">
-              <CalendarClock className="h-4 w-4 mr-2" /> Novo agendamento
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                exportarRelatorioMensal(ags, movs, config);
+                toast.success("Relatório PDF gerado");
+              }}
+            >
+              <Download className="h-4 w-4 mr-2" /> Exportar PDF
             </Button>
-          </Link>
+            <Link to="/agendamentos">
+              <Button className="bg-primary hover:bg-primary/90">
+                <CalendarClock className="h-4 w-4 mr-2" /> Novo agendamento
+              </Button>
+            </Link>
+          </div>
         }
       />
 

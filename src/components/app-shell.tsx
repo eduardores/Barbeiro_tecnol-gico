@@ -1,6 +1,7 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { Scissors, CalendarDays, Wallet, Calculator, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const nav = [
   { to: "/", label: "Painel", icon: LayoutDashboard },
@@ -51,7 +52,9 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
                 </Link>
               );
             })}
+            <div className="ml-1"><ThemeToggle /></div>
           </nav>
+          <div className="md:hidden"><ThemeToggle /></div>
         </div>
       </header>
 
