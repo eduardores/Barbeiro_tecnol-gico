@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app-shell";
 import { useLocalStorage, type Agendamento, type Movimento, type Config } from "@/lib/storage";
 import { brl } from "@/lib/format";
-import { ArrowDownRight, ArrowUpRight, CalendarClock, PiggyBank, TrendingUp, Wallet } from "lucide-react";
+import { exportarRelatorioMensal } from "@/lib/pdf-report";
+import { ArrowDownRight, ArrowUpRight, CalendarClock, Download, PiggyBank, TrendingUp, Wallet } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Dashboard });
 
