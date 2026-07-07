@@ -52,7 +52,9 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
                 </Link>
               );
             })}
+            <div className="ml-1"><ThemeToggle /></div>
           </nav>
+          <div className="md:hidden"><ThemeToggle /></div>
         </div>
       </header>
 
