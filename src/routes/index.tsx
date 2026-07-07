@@ -76,11 +76,22 @@ function Dashboard() {
         title="Painel"
         subtitle="Visão do mês corrente — entradas, saídas e distribuição de lucro."
         action={
-          <Link to="/agendamentos">
-            <Button className="bg-primary hover:bg-primary/90">
-              <CalendarClock className="h-4 w-4 mr-2" /> Novo agendamento
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                exportarRelatorioMensal(ags, movs, config);
+                toast.success("Relatório PDF gerado");
+              }}
+            >
+              <Download className="h-4 w-4 mr-2" /> Exportar PDF
             </Button>
-          </Link>
+            <Link to="/agendamentos">
+              <Button className="bg-primary hover:bg-primary/90">
+                <CalendarClock className="h-4 w-4 mr-2" /> Novo agendamento
+              </Button>
+            </Link>
+          </div>
         }
       />
 
