@@ -93,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Navalha & Cifra — Gestão para Barbearia" },
+      { name: "description", content: "App completo para barbearia: agenda de horários, controle financeiro, cálculo de salário e investimento." },
+      { property: "og:description", content: "App completo para barbearia: agenda de horários, controle financeiro, cálculo de salário e investimento." },
+      { name: "twitter:description", content: "App completo para barbearia: agenda de horários, controle financeiro, cálculo de salário e investimento." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1d44996-674c-4fb9-9831-f39a10d43606/id-preview-97397f2b--8b8a3477-3d21-4f14-b410-64328059347c.lovable.app-1783431752014.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b1d44996-674c-4fb9-9831-f39a10d43606/id-preview-97397f2b--8b8a3477-3d21-4f14-b410-64328059347c.lovable.app-1783431752014.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
