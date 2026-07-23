@@ -27,7 +27,7 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
               <Scissors className="h-5 w-5" />
             </div>
             <div className="leading-tight">
-              <div className="font-display text-xl">Navalha & Cifra</div>
+              <div className="font-display text-xl">Navalha & Fabio Barber</div>
               <div className="text-xs text-muted-foreground -mt-0.5">
                 Gestão de barbearia
               </div>
