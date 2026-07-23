@@ -79,13 +79,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Navalha & Cifra — Gestão para Barbearia" },
+      { title: "Navalha & Fabio Barber — Gestão para Barbearia" },
       {
         name: "description",
         content:
           "App completo para barbearia: agenda de horários, controle financeiro, cálculo de salário e investimento.",
       },
-      { property: "og:title", content: "Navalha & Cifra — Gestão para Barbearia" },
+      { property: "og:title", content: "Navalha & Fabio Barber — Gestão para Barbearia" },
       {
         property: "og:description",
         content:
@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Navalha & Cifra — Gestão para Barbearia" },
+      { name: "twitter:title", content: "Navalha & Fabio Barber — Gestão para Barbearia" },
       { name: "description", content: "App completo para barbearia: agenda de horários, controle financeiro, cálculo de salário e investimento." },
       { property: "og:description", content: "App completo para barbearia: agenda de horários, controle financeiro, cálculo de salário e investimento." },
       { name: "twitter:description", content: "App completo para barbearia: agenda de horários, controle financeiro, cálculo de salário e investimento." },

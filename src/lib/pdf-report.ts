@@ -47,7 +47,7 @@ export function exportarRelatorioMensal(
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
-  doc.text("Navalha & Cifra", 40, 42);
+  doc.text("Navalha & Fabio Barber", 40, 42);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   doc.text("Relatório mensal da barbearia", 40, 62);
@@ -167,7 +167,7 @@ export function exportarRelatorioMensal(
     doc.setFontSize(8);
     doc.setTextColor(120, 120, 120);
     doc.text(
-      `Navalha & Cifra · Relatório ${MESES[mes]}/${ano} · Página ${i} de ${pageCount}`,
+      `Navalha & Fabio Barber · Relatório ${MESES[mes]}/${ano} · Página ${i} de ${pageCount}`,
       W / 2,
       doc.internal.pageSize.getHeight() - 20,
       { align: "center" },
