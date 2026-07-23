@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "fabio-barber-mcp",
+      "version": "0.1.0",
+      "title": "Fabio Barber — Gestão da Barbearia"
+    },
+    "tools": [
+      {
+        "name": "calcular_distribuicao",
+        "title": "Calcular distribuição de lucro",
+        "description": "Calcula, a partir do faturamento e das despesas do mês, quanto vai para salário, investimento e reserva de emergência segundo os percentuais informados.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "entradas": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Total de entradas no mês (R$)."
+            },
+            "saidas": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Total de despesas no mês (R$)."
+            },
+            "pct_salario": {
+              "default": 50,
+              "description": "% do lucro para salário.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "pct_investimento": {
+              "default": 30,
+              "description": "% do lucro para investimento.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "pct_reserva": {
+              "default": 20,
+              "description": "% do lucro para reserva.",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "entradas",
+            "saidas"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "simular_mes",
+        "title": "Simular mês de trabalho",
+        "description": "Projeta o faturamento e a distribuição de um mês a partir do ticket médio, número de atendimentos por dia, dias trabalhados e despesas fixas.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "ticket_medio": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Valor médio por atendimento (R$)."
+            },
+            "atendimentos_por_dia": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Número médio de atendimentos por dia."
+            },
+            "dias_trabalhados": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 31,
+              "description": "Dias trabalhados no mês."
+            },
+            "despesas_fixas": {
+              "default": 0,
+              "description": "Total de despesas fixas do mês (R$).",
+              "type": "number",
+              "minimum": 0
+            },
+            "pct_salario": {
+              "default": 50,
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "pct_investimento": {
+              "default": 30,
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "pct_reserva": {
+              "default": 20,
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "ticket_medio",
+            "atendimentos_por_dia",
+            "dias_trabalhados"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "meta_para_lucro",
+        "title": "Meta de atendimentos para um lucro alvo",
+        "description": "Dado um lucro-alvo mensal, ticket médio e despesas fixas, calcula quantos atendimentos e qual faturamento são necessários.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "lucro_alvo": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Lucro desejado no mês (R$)."
+            },
+            "ticket_medio": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Valor médio por atendimento (R$)."
+            },
+            "despesas_fixas": {
+              "default": 0,
+              "description": "Despesas fixas do mês (R$).",
+              "type": "number",
+              "minimum": 0
+            },
+            "dias_trabalhados": {
+              "default": 22,
+              "description": "Dias trabalhados no mês.",
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 31
+            }
+          },
+          "required": [
+            "lucro_alvo",
+            "ticket_medio"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
