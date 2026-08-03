@@ -17,62 +17,41 @@ export type Database = {
       agendamentos: {
         Row: {
           cliente: string
-          cliente_id: string | null
           created_at: string
           data: string
           hora: string
           id: string
           observacao: string | null
           servico: string
-          servico_id: string | null
           status: Database["public"]["Enums"]["agendamento_status"]
           updated_at: string
           valor: number
         }
         Insert: {
           cliente: string
-          cliente_id?: string | null
           created_at?: string
           data: string
           hora: string
-          id?: string
+          id: string
           observacao?: string | null
           servico: string
-          servico_id?: string | null
           status?: Database["public"]["Enums"]["agendamento_status"]
           updated_at?: string
           valor?: number
         }
         Update: {
           cliente?: string
-          cliente_id?: string | null
           created_at?: string
           data?: string
           hora?: string
           id?: string
           observacao?: string | null
           servico?: string
-          servico_id?: string | null
           status?: Database["public"]["Enums"]["agendamento_status"]
           updated_at?: string
           valor?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "agendamentos_cliente_id_fkey"
-            columns: ["cliente_id"]
-            isOneToOne: false
-            referencedRelation: "clientes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "agendamentos_servico_id_fkey"
-            columns: ["servico_id"]
-            isOneToOne: false
-            referencedRelation: "servicos"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       clientes: {
         Row: {
@@ -127,8 +106,7 @@ export type Database = {
       }
       movimentos: {
         Row: {
-          agendamento_id: string | null
-          categoria: Database["public"]["Enums"]["movimento_categoria"]
+          categoria: string
           created_at: string
           data: string
           descricao: string
@@ -137,18 +115,16 @@ export type Database = {
           valor: number
         }
         Insert: {
-          agendamento_id?: string | null
-          categoria: Database["public"]["Enums"]["movimento_categoria"]
+          categoria: string
           created_at?: string
           data: string
-          descricao: string
-          id?: string
+          descricao?: string
+          id: string
           tipo: Database["public"]["Enums"]["movimento_tipo"]
-          valor: number
+          valor?: number
         }
         Update: {
-          agendamento_id?: string | null
-          categoria?: Database["public"]["Enums"]["movimento_categoria"]
+          categoria?: string
           created_at?: string
           data?: string
           descricao?: string
@@ -156,15 +132,7 @@ export type Database = {
           tipo?: Database["public"]["Enums"]["movimento_tipo"]
           valor?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "movimentos_agendamento_id_fkey"
-            columns: ["agendamento_id"]
-            isOneToOne: false
-            referencedRelation: "agendamentos"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       servicos: {
         Row: {
@@ -210,16 +178,6 @@ export type Database = {
     }
     Enums: {
       agendamento_status: "agendado" | "concluido" | "cancelado"
-      movimento_categoria:
-        | "atendimento"
-        | "extra"
-        | "produto"
-        | "aluguel"
-        | "insumos"
-        | "marketing"
-        | "equipamento"
-        | "imposto"
-        | "outros"
       movimento_tipo: "entrada" | "saida"
     }
     CompositeTypes: {
@@ -349,17 +307,6 @@ export const Constants = {
   public: {
     Enums: {
       agendamento_status: ["agendado", "concluido", "cancelado"],
-      movimento_categoria: [
-        "atendimento",
-        "extra",
-        "produto",
-        "aluguel",
-        "insumos",
-        "marketing",
-        "equipamento",
-        "imposto",
-        "outros",
-      ],
       movimento_tipo: ["entrada", "saida"],
     },
   },
