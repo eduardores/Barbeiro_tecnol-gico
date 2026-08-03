@@ -42,7 +42,9 @@ function emit(key: string) {
 
 function subscribe(key: string, fn: () => void) {
   (listeners[key] ??= new Set()).add(fn);
-  return () => listeners[key]?.delete(fn);
+  return () => {
+    listeners[key]?.delete(fn);
+  };
 }
 
 function setStore(key: string, value: unknown) {
