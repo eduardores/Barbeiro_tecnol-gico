@@ -25,6 +25,7 @@ export type Database = {
           servico: string
           status: Database["public"]["Enums"]["agendamento_status"]
           updated_at: string
+          user_id: string
           valor: number
         }
         Insert: {
@@ -37,6 +38,7 @@ export type Database = {
           servico: string
           status?: Database["public"]["Enums"]["agendamento_status"]
           updated_at?: string
+          user_id: string
           valor?: number
         }
         Update: {
@@ -49,6 +51,7 @@ export type Database = {
           servico?: string
           status?: Database["public"]["Enums"]["agendamento_status"]
           updated_at?: string
+          user_id?: string
           valor?: number
         }
         Relationships: []
@@ -60,6 +63,7 @@ export type Database = {
           nome: string
           observacao: string | null
           telefone: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string
@@ -67,6 +71,7 @@ export type Database = {
           nome: string
           observacao?: string | null
           telefone?: string | null
+          user_id: string
         }
         Update: {
           created_at?: string
@@ -74,12 +79,13 @@ export type Database = {
           nome?: string
           observacao?: string | null
           telefone?: string | null
+          user_id?: string
         }
         Relationships: []
       }
       config: {
         Row: {
-          id: number
+          created_at: string
           logo_url: string | null
           moeda: string
           nome_empresa: string
@@ -88,9 +94,10 @@ export type Database = {
           pct_salario: number
           subtitulo: string
           updated_at: string
+          user_id: string
         }
         Insert: {
-          id?: number
+          created_at?: string
           logo_url?: string | null
           moeda?: string
           nome_empresa?: string
@@ -99,9 +106,10 @@ export type Database = {
           pct_salario?: number
           subtitulo?: string
           updated_at?: string
+          user_id: string
         }
         Update: {
-          id?: number
+          created_at?: string
           logo_url?: string | null
           moeda?: string
           nome_empresa?: string
@@ -110,6 +118,7 @@ export type Database = {
           pct_salario?: number
           subtitulo?: string
           updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -121,6 +130,7 @@ export type Database = {
           descricao: string
           id: string
           tipo: Database["public"]["Enums"]["movimento_tipo"]
+          user_id: string
           valor: number
         }
         Insert: {
@@ -130,6 +140,7 @@ export type Database = {
           descricao?: string
           id: string
           tipo: Database["public"]["Enums"]["movimento_tipo"]
+          user_id: string
           valor?: number
         }
         Update: {
@@ -139,6 +150,7 @@ export type Database = {
           descricao?: string
           id?: string
           tipo?: Database["public"]["Enums"]["movimento_tipo"]
+          user_id?: string
           valor?: number
         }
         Relationships: []
@@ -151,6 +163,7 @@ export type Database = {
           id: string
           nome: string
           preco: number
+          user_id: string
         }
         Insert: {
           ativo?: boolean
@@ -159,6 +172,7 @@ export type Database = {
           id?: string
           nome: string
           preco?: number
+          user_id: string
         }
         Update: {
           ativo?: boolean
@@ -167,6 +181,7 @@ export type Database = {
           id?: string
           nome?: string
           preco?: number
+          user_id?: string
         }
         Relationships: []
       }
