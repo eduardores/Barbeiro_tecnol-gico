@@ -75,8 +75,16 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
               );
             })}
             <div className="ml-1"><ThemeToggle /></div>
+            <Button variant="ghost" size="icon" onClick={sair} aria-label="Sair">
+              <LogOut className="h-4 w-4" />
+            </Button>
           </nav>
-          <div className="md:hidden"><ThemeToggle /></div>
+          <div className="md:hidden flex items-center gap-1">
+            <ThemeToggle />
+            <Button variant="ghost" size="icon" onClick={sair} aria-label="Sair">
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </header>
 
