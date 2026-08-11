@@ -24,6 +24,9 @@ export type Config = {
   percentualSalario: number;
   percentualInvestimento: number;
   reservaEmergencia: number;
+  nomeEmpresa: string;
+  subtitulo: string;
+  logoUrl: string | null;
 };
 
 /* ------------------------------------------------------------------ */
@@ -83,7 +86,7 @@ async function load(key: string) {
     } else if (key === "config") {
       const { data } = await supabase
         .from("config")
-        .select("pct_salario, pct_investimento, pct_reserva")
+        .select("pct_salario, pct_investimento, pct_reserva, nome_empresa, subtitulo, logo_url")
         .eq("id", 1)
         .maybeSingle();
       if (data) {
@@ -91,6 +94,9 @@ async function load(key: string) {
           percentualSalario: Number(data.pct_salario),
           percentualInvestimento: Number(data.pct_investimento),
           reservaEmergencia: Number(data.pct_reserva),
+          nomeEmpresa: data.nome_empresa ?? "Minha Barbearia",
+          subtitulo: data.subtitulo ?? "Gestão de barbearia",
+          logoUrl: data.logo_url ?? null,
         } as Config);
       }
     }
@@ -128,6 +134,9 @@ async function persist(key: string, prev: unknown, next: unknown) {
         pct_salario: c.percentualSalario,
         pct_investimento: c.percentualInvestimento,
         pct_reserva: c.reservaEmergencia,
+        nome_empresa: c.nomeEmpresa,
+        subtitulo: c.subtitulo,
+        logo_url: c.logoUrl,
       });
     }
   } catch {
