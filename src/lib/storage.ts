@@ -168,3 +168,12 @@ export function useLocalStorage<T>(key: string, initial: T) {
 
   return [value, setValue] as const;
 }
+
+export const defaultConfig: Config = {
+  percentualSalario: 50,
+  percentualInvestimento: 20,
+  reservaEmergencia: 10,
+  nomeEmpresa: "Minha Barbearia",
+  subtitulo: "Gestão de barbearia",
+  logoUrl: null,
+};
