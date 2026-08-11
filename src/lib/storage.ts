@@ -30,7 +30,7 @@ export type Config = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Store simples em memória, sincronizado com o banco na nuvem          */
+/* Store simples em memória, sincronizado com o banco (por usuário)     */
 /* ------------------------------------------------------------------ */
 
 type Store = Record<string, unknown>;
@@ -55,16 +55,36 @@ function setStore(key: string, value: unknown) {
   emit(key);
 }
 
+async function currentUserId(): Promise<string | null> {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user.id ?? null;
+}
+
+/** Limpa o cache local ao trocar de usuário / sair. */
+export function resetStore() {
+  for (const key of Object.keys(loaded)) delete loaded[key];
+  for (const key of Object.keys(store)) {
+    store[key] = Array.isArray(store[key]) ? [] : store[key];
+  }
+  Object.keys(listeners).forEach(emit);
+}
+
 /* ---------- leitura inicial ---------- */
 
 async function load(key: string) {
   if (loaded[key]) return;
   loaded[key] = true;
   try {
+    const uid = await currentUserId();
+    if (!uid) {
+      loaded[key] = false;
+      return;
+    }
     if (key === "agendamentos") {
       const { data } = await supabase
         .from("agendamentos")
         .select("id, cliente, servico, data, hora, valor, status")
+        .eq("user_id", uid)
         .order("data", { ascending: true });
       if (data) {
         setStore(
@@ -76,6 +96,7 @@ async function load(key: string) {
       const { data } = await supabase
         .from("movimentos")
         .select("id, tipo, categoria, descricao, valor, data")
+        .eq("user_id", uid)
         .order("data", { ascending: false });
       if (data) {
         setStore(
@@ -87,7 +108,7 @@ async function load(key: string) {
       const { data } = await supabase
         .from("config")
         .select("pct_salario, pct_investimento, pct_reserva, nome_empresa, subtitulo, logo_url")
-        .eq("id", 1)
+        .eq("user_id", uid)
         .maybeSingle();
       if (data) {
         setStore(key, {
@@ -109,6 +130,9 @@ async function load(key: string) {
 
 async function persist(key: string, prev: unknown, next: unknown) {
   try {
+    const uid = await currentUserId();
+    if (!uid) return;
+
     if (key === "agendamentos" || key === "movimentos") {
       const before = (prev as { id: string }[]) ?? [];
       const after = (next as { id: string }[]) ?? [];
@@ -117,20 +141,22 @@ async function persist(key: string, prev: unknown, next: unknown) {
 
       const removed = before.filter((r) => !afterMap.has(r.id)).map((r) => r.id);
       if (removed.length) {
-        await supabase.from(key).delete().in("id", removed);
+        await supabase.from(key).delete().eq("user_id", uid).in("id", removed);
       }
 
-      const changed = after.filter((r) => {
-        const old = beforeMap.get(r.id);
-        return !old || JSON.stringify(old) !== JSON.stringify(r);
-      });
+      const changed = after
+        .filter((r) => {
+          const old = beforeMap.get(r.id);
+          return !old || JSON.stringify(old) !== JSON.stringify(r);
+        })
+        .map((r) => ({ ...r, user_id: uid }));
       if (changed.length) {
         await supabase.from(key).upsert(changed as never);
       }
     } else if (key === "config") {
       const c = next as Config;
       await supabase.from("config").upsert({
-        id: 1,
+        user_id: uid,
         pct_salario: c.percentualSalario,
         pct_investimento: c.percentualInvestimento,
         pct_reserva: c.reservaEmergencia,
