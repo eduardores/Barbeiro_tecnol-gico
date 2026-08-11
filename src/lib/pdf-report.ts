@@ -180,7 +180,7 @@ export function exportarRelatorioMensal(
     doc.setFontSize(8);
     doc.setTextColor(120, 120, 120);
     doc.text(
-      `Navalha & Fabio Barber · Relatório ${MESES[mes]}/${ano} · Página ${i} de ${pageCount}`,
+      `${nome} · Relatório ${MESES[mes]}/${ano} · Página ${i} de ${pageCount}`,
       W / 2,
       doc.internal.pageSize.getHeight() - 20,
       { align: "center" },
