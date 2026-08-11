@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app-shell";
 import {
   useLocalStorage,
+  defaultConfig,
   type Agendamento,
   type Movimento,
   type Config,
@@ -16,11 +17,6 @@ import { brl } from "@/lib/format";
 
 export const Route = createFileRoute("/calculos")({ component: Page });
 
-const defaultConfig: Config = {
-  percentualSalario: 50,
-  percentualInvestimento: 20,
-  reservaEmergencia: 10,
-};
 
 function Page() {
   const [config, setConfig] = useLocalStorage<Config>("config", defaultConfig);
