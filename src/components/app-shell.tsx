@@ -2,6 +2,7 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { Scissors, CalendarDays, Wallet, Calculator, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useLocalStorage, defaultConfig, type Config } from "@/lib/storage";
 
 const nav = [
   { to: "/", label: "Painel", icon: LayoutDashboard },
@@ -12,6 +13,8 @@ const nav = [
 
 export function AppShell({ children }: { children?: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [config] = useLocalStorage<Config>("config", defaultConfig);
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
