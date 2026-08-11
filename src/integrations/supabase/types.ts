@@ -80,26 +80,35 @@ export type Database = {
       config: {
         Row: {
           id: number
+          logo_url: string | null
           moeda: string
+          nome_empresa: string
           pct_investimento: number
           pct_reserva: number
           pct_salario: number
+          subtitulo: string
           updated_at: string
         }
         Insert: {
           id?: number
+          logo_url?: string | null
           moeda?: string
+          nome_empresa?: string
           pct_investimento?: number
           pct_reserva?: number
           pct_salario?: number
+          subtitulo?: string
           updated_at?: string
         }
         Update: {
           id?: number
+          logo_url?: string | null
           moeda?: string
+          nome_empresa?: string
           pct_investimento?: number
           pct_reserva?: number
           pct_salario?: number
+          subtitulo?: string
           updated_at?: string
         }
         Relationships: []
