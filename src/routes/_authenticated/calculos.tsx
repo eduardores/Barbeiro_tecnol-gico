@@ -15,7 +15,7 @@ import {
 } from "@/lib/storage";
 import { brl } from "@/lib/format";
 
-export const Route = createFileRoute("/calculos")({ component: Page });
+export const Route = createFileRoute("/_authenticated/calculos")({ component: Page });
 
 
 function Page() {

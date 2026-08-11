@@ -10,7 +10,7 @@ import { brl } from "@/lib/format";
 import { exportarRelatorioMensal } from "@/lib/pdf-report";
 import { ArrowDownRight, ArrowUpRight, CalendarClock, Download, PiggyBank, TrendingUp, Wallet } from "lucide-react";
 
-export const Route = createFileRoute("/")({ component: Dashboard });
+export const Route = createFileRoute("/_authenticated/")({ component: Dashboard });
 
 
 function Dashboard() {
