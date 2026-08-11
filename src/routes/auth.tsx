@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Scissors } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +44,33 @@ function AuthPage() {
       if (session) void navigate({ to: "/" });
     });
     return () => sub.subscription.unsubscribe();
+  }, [navigate]);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (mode === "signup") {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password: senha,
+          options: { emailRedirectTo: `${window.location.origin}/auth` },
+        });
+        if (error) throw error;
+        toast.success("Conta criada! Confirme seu e-mail para entrar.");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
+        if (error) throw error;
+        toast.success("Bem-vindo de volta!");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível continuar");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return () => sub.subscription.unsubscribe();
   }, [navigate]);
 
   async function submit(e: React.FormEvent) {
@@ -128,10 +154,6 @@ function AuthPage() {
                 {mode === "login" ? "Entrar" : "Criar conta"}
               </Button>
             </form>
-
-            <Button type="button" variant="outline" className="w-full" onClick={google}>
-              Continuar com Google
-            </Button>
 
             <button
               type="button"
