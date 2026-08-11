@@ -30,7 +30,7 @@ import {
 import { brl, uid } from "@/lib/format";
 import { ArrowDownRight, ArrowUpRight, Plus, Trash2 } from "lucide-react";
 
-export const Route = createFileRoute("/financeiro")({ component: Page });
+export const Route = createFileRoute("/_authenticated/financeiro")({ component: Page });
 
 const categoriasEntrada = ["Serviço avulso", "Venda de produto", "Gorjeta", "Outro"];
 const categoriasSaida = [

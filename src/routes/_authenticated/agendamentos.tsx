@@ -26,7 +26,7 @@ import { useLocalStorage, type Agendamento } from "@/lib/storage";
 import { brl, uid } from "@/lib/format";
 import { Check, Plus, Trash2, X } from "lucide-react";
 
-export const Route = createFileRoute("/agendamentos")({ component: Page });
+export const Route = createFileRoute("/_authenticated/agendamentos")({ component: Page });
 
 const servicosPadrao = ["Corte", "Barba", "Corte + Barba", "Sobrancelha", "Pigmentação"];
 

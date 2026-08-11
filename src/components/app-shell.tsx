@@ -1,8 +1,10 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { Scissors, CalendarDays, Wallet, Calculator, LayoutDashboard } from "lucide-react";
+import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Scissors, CalendarDays, Wallet, Calculator, LayoutDashboard, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useLocalStorage, defaultConfig, type Config } from "@/lib/storage";
+import { useLocalStorage, defaultConfig, resetStore, type Config } from "@/lib/storage";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 const nav = [
   { to: "/", label: "Painel", icon: LayoutDashboard },
@@ -14,6 +16,14 @@ const nav = [
 export function AppShell({ children }: { children?: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [config] = useLocalStorage<Config>("config", defaultConfig);
+  const navigate = useNavigate();
+
+  async function sair() {
+    await supabase.auth.signOut();
+    resetStore();
+    void navigate({ to: "/auth" });
+  }
+
 
 
   return (
@@ -65,8 +75,16 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
               );
             })}
             <div className="ml-1"><ThemeToggle /></div>
+            <Button variant="ghost" size="icon" onClick={sair} aria-label="Sair">
+              <LogOut className="h-4 w-4" />
+            </Button>
           </nav>
-          <div className="md:hidden"><ThemeToggle /></div>
+          <div className="md:hidden flex items-center gap-1">
+            <ThemeToggle />
+            <Button variant="ghost" size="icon" onClick={sair} aria-label="Sair">
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </header>
 
