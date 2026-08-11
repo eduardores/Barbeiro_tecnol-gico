@@ -70,40 +70,6 @@ function AuthPage() {
     }
   }
 
-  return () => sub.subscription.unsubscribe();
-  }, [navigate]);
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password: senha,
-          options: { emailRedirectTo: `${window.location.origin}/auth` },
-        });
-        if (error) throw error;
-        toast.success("Conta criada! Confirme seu e-mail para entrar.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
-        if (error) throw error;
-        toast.success("Bem-vindo de volta!");
-      }
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Não foi possível continuar");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function google() {
-    try {
-      await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    } catch {
-      toast.error("Não foi possível entrar com o Google");
-    }
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
