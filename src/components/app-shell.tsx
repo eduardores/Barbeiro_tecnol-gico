@@ -2,6 +2,7 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { Scissors, CalendarDays, Wallet, Calculator, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useLocalStorage, defaultConfig, type Config } from "@/lib/storage";
 
 const nav = [
   { to: "/", label: "Painel", icon: LayoutDashboard },
@@ -12,6 +13,8 @@ const nav = [
 
 export function AppShell({ children }: { children?: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [config] = useLocalStorage<Config>("config", defaultConfig);
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -21,18 +24,27 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
             <div
-              className="h-10 w-10 rounded-xl flex items-center justify-center text-primary-foreground shadow-[var(--shadow-glow)]"
-              style={{ background: "var(--gradient-navy)" }}
+              className="h-10 w-10 rounded-xl flex items-center justify-center text-primary-foreground shadow-[var(--shadow-glow)] overflow-hidden"
+              style={config.logoUrl ? undefined : { background: "var(--gradient-navy)" }}
             >
-              <Scissors className="h-5 w-5" />
+              {config.logoUrl ? (
+                <img
+                  src={config.logoUrl}
+                  alt={`Logo ${config.nomeEmpresa}`}
+                  className="h-full w-full object-contain"
+                />
+              ) : (
+                <Scissors className="h-5 w-5" />
+              )}
             </div>
             <div className="leading-tight">
-              <div className="font-display text-xl">Navalha & Fabio Barber</div>
+              <div className="font-display text-xl">{config.nomeEmpresa}</div>
               <div className="text-xs text-muted-foreground -mt-0.5">
-                Gestão de barbearia
+                {config.subtitulo}
               </div>
             </div>
           </Link>
+
           <nav className="hidden md:flex items-center gap-1">
             {nav.map((n) => {
               const active = pathname === n.to;

@@ -5,18 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app-shell";
-import { useLocalStorage, type Agendamento, type Movimento, type Config } from "@/lib/storage";
+import { useLocalStorage, defaultConfig, type Agendamento, type Movimento, type Config } from "@/lib/storage";
 import { brl } from "@/lib/format";
 import { exportarRelatorioMensal } from "@/lib/pdf-report";
 import { ArrowDownRight, ArrowUpRight, CalendarClock, Download, PiggyBank, TrendingUp, Wallet } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Dashboard });
 
-const defaultConfig: Config = {
-  percentualSalario: 50,
-  percentualInvestimento: 20,
-  reservaEmergencia: 10,
-};
 
 function Dashboard() {
   const [ags] = useLocalStorage<Agendamento[]>("agendamentos", []);

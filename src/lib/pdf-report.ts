@@ -40,17 +40,29 @@ export function exportarRelatorioMensal(
 
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const W = doc.internal.pageSize.getWidth();
+  const nome = config.nomeEmpresa || "Minha Barbearia";
 
   // Navy header band
   doc.setFillColor(24, 32, 74);
   doc.rect(0, 0, W, 90, "F");
+
+  let textX = 40;
+  if (config.logoUrl?.startsWith("data:image")) {
+    try {
+      doc.addImage(config.logoUrl, 40, 20, 50, 50, undefined, "FAST");
+      textX = 104;
+    } catch {
+      /* logo inválida: segue sem imagem */
+    }
+  }
+
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
-  doc.text("Navalha & Fabio Barber", 40, 42);
+  doc.text(nome, textX, 42);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
-  doc.text("Relatório mensal da barbearia", 40, 62);
+  doc.text(config.subtitulo || "Relatório mensal", textX, 62);
   doc.setFontSize(10);
   doc.text(`${MESES[mes]} / ${ano}`, W - 40, 42, { align: "right" });
   doc.text(
@@ -59,6 +71,7 @@ export function exportarRelatorioMensal(
     62,
     { align: "right" },
   );
+
 
   // Resumo
   doc.setTextColor(20, 20, 20);
@@ -167,7 +180,7 @@ export function exportarRelatorioMensal(
     doc.setFontSize(8);
     doc.setTextColor(120, 120, 120);
     doc.text(
-      `Navalha & Fabio Barber · Relatório ${MESES[mes]}/${ano} · Página ${i} de ${pageCount}`,
+      `${nome} · Relatório ${MESES[mes]}/${ano} · Página ${i} de ${pageCount}`,
       W / 2,
       doc.internal.pageSize.getHeight() - 20,
       { align: "center" },
