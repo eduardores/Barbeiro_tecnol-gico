@@ -63,12 +63,83 @@ function Page() {
     toast.success("Percentuais salvos");
   }
 
+  function onLogo(file: File | undefined) {
+    if (!file) return;
+    if (file.size > 800_000) {
+      toast.error("Imagem muito grande. Use uma logo de até 800 KB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setConfig({ ...config, logoUrl: String(reader.result) });
+      toast.success("Logo atualizada");
+    };
+    reader.readAsDataURL(file);
+  }
+
   return (
     <>
       <PageHeader
         title="Cálculos"
-        subtitle="Defina como o lucro é dividido entre você, o negócio e a reserva."
+        subtitle="Defina o nome da sua empresa e como o lucro é dividido."
       />
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="font-display text-xl">Identidade da empresa</CardTitle>
+          <p className="text-xs text-muted-foreground">
+            O nome e a logo aparecem no topo do app e no relatório em PDF.
+          </p>
+        </CardHeader>
+        <CardContent className="grid gap-4 sm:grid-cols-[auto_1fr]">
+          <div className="flex flex-col items-center gap-2">
+            <div className="h-20 w-20 rounded-xl border border-border overflow-hidden flex items-center justify-center bg-secondary">
+              {config.logoUrl ? (
+                <img src={config.logoUrl} alt="Logo da empresa" className="h-full w-full object-contain" />
+              ) : (
+                <span className="text-[10px] text-muted-foreground text-center px-1">Sem logo</span>
+              )}
+            </div>
+            <label className="text-xs text-accent cursor-pointer hover:underline">
+              Enviar logo
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                className="hidden"
+                onChange={(e) => onLogo(e.target.files?.[0])}
+              />
+            </label>
+            {config.logoUrl && (
+              <button
+                type="button"
+                className="text-xs text-muted-foreground hover:text-destructive"
+                onClick={() => setConfig({ ...config, logoUrl: null })}
+              >
+                Remover
+              </button>
+            )}
+          </div>
+          <div className="grid gap-3 content-start">
+            <div className="grid gap-1.5">
+              <Label className="text-sm">Nome da empresa</Label>
+              <Input
+                value={config.nomeEmpresa}
+                placeholder="Ex.: Barbearia do João"
+                onChange={(e) => setConfig({ ...config, nomeEmpresa: e.target.value })}
+              />
+            </div>
+            <div className="grid gap-1.5">
+              <Label className="text-sm">Frase / subtítulo</Label>
+              <Input
+                value={config.subtitulo}
+                placeholder="Ex.: Cortes e barba desde 2015"
+                onChange={(e) => setConfig({ ...config, subtitulo: e.target.value })}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
