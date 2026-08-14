@@ -3,7 +3,12 @@
   "sdk_version": "0.24.0",
   "path": "/mcp",
   "auth": {
-    "type": "none"
+    "type": "oauth",
+    "issuer": "https://dwqqkfhczbtemqoiwnys.supabase.co/auth/v1",
+    "resource_name": "Fabio Barber — Gestão da Barbearia",
+    "accepted_audiences": [
+      "authenticated"
+    ]
   },
   "mcp": {
     "server": {
