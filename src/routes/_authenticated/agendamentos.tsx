@@ -59,14 +59,21 @@ function Page() {
     setItems(items.filter((a) => a.id !== id));
   }
 
-  // Agrupa por data (desc) e ordena horários dentro de cada dia (asc)
+  // Agrupa por mês (asc) e, dentro de cada mês, por dia (asc)
   const porDia = [...items]
-    .sort((a, b) => (b.data + b.hora).localeCompare(a.data + a.hora))
+    .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora))
     .reduce<Record<string, Agendamento[]>>((acc, a) => {
       (acc[a.data] ??= []).push(a);
       return acc;
     }, {});
-  const dias = Object.keys(porDia).sort((x, y) => y.localeCompare(x));
+  const dias = Object.keys(porDia).sort((x, y) => x.localeCompare(y));
+  // Agrupa os dias por mês (chave "YYYY-MM") em ordem cronológica
+  const porMes = dias.reduce<Record<string, string[]>>((acc, data) => {
+    const mes = data.slice(0, 7);
+    (acc[mes] ??= []).push(data);
+    return acc;
+  }, {});
+  const meses = Object.keys(porMes).sort((x, y) => x.localeCompare(y));
 
   return (
     <>
