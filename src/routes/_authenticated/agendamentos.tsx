@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -59,9 +59,14 @@ function Page() {
     setItems(items.filter((a) => a.id !== id));
   }
 
-  const ordenados = [...items].sort(
-    (a, b) => (b.data + b.hora).localeCompare(a.data + a.hora),
-  );
+  // Agrupa por data (desc) e ordena horários dentro de cada dia (asc)
+  const porDia = [...items]
+    .sort((a, b) => (b.data + b.hora).localeCompare(a.data + a.hora))
+    .reduce<Record<string, Agendamento[]>>((acc, a) => {
+      (acc[a.data] ??= []).push(a);
+      return acc;
+    }, {});
+  const dias = Object.keys(porDia).sort((x, y) => y.localeCompare(x));
 
   return (
     <>
@@ -145,83 +150,111 @@ function Page() {
         }
       />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-display text-xl">Todos os horários</CardTitle>
-        </CardHeader>
-        <CardContent className="divide-y divide-border/60">
-          {ordenados.length === 0 && (
-            <p className="text-sm text-muted-foreground py-6 text-center">
+      {dias.length === 0 && (
+        <Card>
+          <CardContent className="py-10 text-center">
+            <p className="text-sm text-muted-foreground">
               Nenhum agendamento ainda. Clique em "Novo horário".
             </p>
-          )}
-          {ordenados.map((a) => (
-            <div key={a.id} className="flex flex-wrap items-center gap-3 py-4">
-              <div className="min-w-[110px]">
-                <div className="font-mono text-sm">{formatData(a.data)}</div>
-                <div className="font-display text-lg">{a.hora}</div>
-              </div>
-              <div className="flex-1 min-w-[160px]">
-                <div className="font-medium">{a.cliente}</div>
-                <div className="text-xs text-muted-foreground">{a.servico}</div>
-              </div>
-              <div className="text-right">
-                <div className="font-mono">{brl(a.valor)}</div>
-                <Badge
-                  variant={
-                    a.status === "concluido"
-                      ? "default"
-                      : a.status === "cancelado"
-                        ? "destructive"
-                        : "outline"
-                  }
-                  className="text-[10px] mt-1"
-                >
-                  {a.status}
-                </Badge>
-              </div>
-              <div className="flex gap-1">
-                {a.status !== "concluido" && (
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => {
-                      updateStatus(a.id, "concluido");
-                      toast.success("Marcado como concluído — entrou no caixa");
-                    }}
-                    title="Concluir"
-                  >
-                    <Check className="h-4 w-4" />
-                  </Button>
-                )}
-                {a.status !== "cancelado" && (
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => updateStatus(a.id, "cancelado")}
-                    title="Cancelar"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-                <Button
-                  size="icon"
-                  variant="outline"
-                  onClick={() => remover(a.id)}
-                  title="Remover"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="flex flex-col gap-4">
+        {dias.map((data) => {
+          const lista = porDia[data].sort((a, b) => a.hora.localeCompare(b.hora));
+          const [y, m, day] = data.split("-");
+          const nomeMes = MESES[Number(m) - 1] ?? m;
+          const total = lista.reduce((s, a) => s + a.valor, 0);
+          return (
+            <Card key={data}>
+              <CardHeader className="pb-3">
+                <div className="flex items-baseline justify-between gap-3">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-display text-3xl leading-none text-primary">{day}</span>
+                    <div className="leading-tight">
+                      <div className="font-display text-lg capitalize">{nomeMes}</div>
+                      <div className="text-xs text-muted-foreground font-mono">{y}</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-muted-foreground">
+                      {lista.length} {lista.length === 1 ? "horário" : "horários"}
+                    </div>
+                    <div className="font-mono text-sm">{brl(total)}</div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="divide-y divide-border/60 pt-0">
+                {lista.map((a) => (
+                  <div key={a.id} className="flex flex-wrap items-center gap-3 py-4">
+                    <div className="min-w-[70px]">
+                      <div className="font-display text-xl">{a.hora}</div>
+                    </div>
+                    <div className="flex-1 min-w-[140px]">
+                      <div className="font-medium">{a.cliente}</div>
+                      <div className="text-xs text-muted-foreground">{a.servico}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-mono">{brl(a.valor)}</div>
+                      <Badge
+                        variant={
+                          a.status === "concluido"
+                            ? "default"
+                            : a.status === "cancelado"
+                              ? "destructive"
+                              : "outline"
+                        }
+                        className="text-[10px] mt-1"
+                      >
+                        {a.status}
+                      </Badge>
+                    </div>
+                    <div className="flex gap-1">
+                      {a.status !== "concluido" && (
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          onClick={() => {
+                            updateStatus(a.id, "concluido");
+                            toast.success("Marcado como concluído — entrou no caixa");
+                          }}
+                          title="Concluir"
+                        >
+                          <Check className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {a.status !== "cancelado" && (
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          onClick={() => updateStatus(a.id, "cancelado")}
+                          title="Cancelar"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        onClick={() => remover(a.id)}
+                        title="Remover"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </>
   );
 }
 
-function formatData(d: string) {
-  const [y, m, day] = d.split("-");
-  return `${day}/${m}/${y.slice(2)}`;
-}
+const MESES = [
+  "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+  "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+];
