@@ -59,14 +59,21 @@ function Page() {
     setItems(items.filter((a) => a.id !== id));
   }
 
-  // Agrupa por data (desc) e ordena horários dentro de cada dia (asc)
+  // Agrupa por mês (asc) e, dentro de cada mês, por dia (asc)
   const porDia = [...items]
-    .sort((a, b) => (b.data + b.hora).localeCompare(a.data + a.hora))
+    .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora))
     .reduce<Record<string, Agendamento[]>>((acc, a) => {
       (acc[a.data] ??= []).push(a);
       return acc;
     }, {});
-  const dias = Object.keys(porDia).sort((x, y) => y.localeCompare(x));
+  const dias = Object.keys(porDia).sort((x, y) => x.localeCompare(y));
+  // Agrupa os dias por mês (chave "YYYY-MM") em ordem cronológica
+  const porMes = dias.reduce<Record<string, string[]>>((acc, data) => {
+    const mes = data.slice(0, 7);
+    (acc[mes] ??= []).push(data);
+    return acc;
+  }, {});
+  const meses = Object.keys(porMes).sort((x, y) => x.localeCompare(y));
 
   return (
     <>
@@ -160,93 +167,119 @@ function Page() {
         </Card>
       )}
 
-      <div className="flex flex-col gap-4">
-        {dias.map((data) => {
-          const lista = porDia[data].sort((a, b) => a.hora.localeCompare(b.hora));
-          const [y, m, day] = data.split("-");
+      <div className="flex flex-col gap-6">
+        {meses.map((mes) => {
+          const [y, m] = mes.split("-");
           const nomeMes = MESES[Number(m) - 1] ?? m;
-          const total = lista.reduce((s, a) => s + a.valor, 0);
+          const diasDoMes = porMes[mes];
+          const totalMes = diasDoMes.reduce(
+            (s, d) => s + porDia[d].reduce((s2, a) => s2 + a.valor, 0),
+            0,
+          );
           return (
-            <Card key={data}>
-              <CardHeader className="pb-3">
-                <div className="flex items-baseline justify-between gap-3">
-                  <div className="flex items-baseline gap-3">
-                    <span className="font-display text-3xl leading-none text-primary">{day}</span>
-                    <div className="leading-tight">
-                      <div className="font-display text-lg capitalize">{nomeMes}</div>
-                      <div className="text-xs text-muted-foreground font-mono">{y}</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-muted-foreground">
-                      {lista.length} {lista.length === 1 ? "horário" : "horários"}
-                    </div>
-                    <div className="font-mono text-sm">{brl(total)}</div>
-                  </div>
+            <div key={mes} className="flex flex-col gap-3">
+              <div className="flex items-baseline justify-between gap-3 px-1">
+                <div className="flex items-baseline gap-2">
+                  <h2 className="font-display text-2xl capitalize text-primary">{nomeMes}</h2>
+                  <span className="text-xs text-muted-foreground font-mono">{y}</span>
                 </div>
-              </CardHeader>
-              <CardContent className="divide-y divide-border/60 pt-0">
-                {lista.map((a) => (
-                  <div key={a.id} className="flex flex-wrap items-center gap-3 py-4">
-                    <div className="min-w-[70px]">
-                      <div className="font-display text-xl">{a.hora}</div>
-                    </div>
-                    <div className="flex-1 min-w-[140px]">
-                      <div className="font-medium">{a.cliente}</div>
-                      <div className="text-xs text-muted-foreground">{a.servico}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-mono">{brl(a.valor)}</div>
-                      <Badge
-                        variant={
-                          a.status === "concluido"
-                            ? "default"
-                            : a.status === "cancelado"
-                              ? "destructive"
-                              : "outline"
-                        }
-                        className="text-[10px] mt-1"
-                      >
-                        {a.status}
-                      </Badge>
-                    </div>
-                    <div className="flex gap-1">
-                      {a.status !== "concluido" && (
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          onClick={() => {
-                            updateStatus(a.id, "concluido");
-                            toast.success("Marcado como concluído — entrou no caixa");
-                          }}
-                          title="Concluir"
-                        >
-                          <Check className="h-4 w-4" />
-                        </Button>
-                      )}
-                      {a.status !== "cancelado" && (
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          onClick={() => updateStatus(a.id, "cancelado")}
-                          title="Cancelar"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      )}
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        onClick={() => remover(a.id)}
-                        title="Remover"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+                <div className="text-right">
+                  <div className="text-xs text-muted-foreground">
+                    {diasDoMes.reduce((n, d) => n + porDia[d].length, 0)} horários
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+                  <div className="font-mono text-sm text-muted-foreground">{brl(totalMes)}</div>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4">
+                {diasDoMes.map((data) => {
+                  const lista = porDia[data].sort((a, b) => a.hora.localeCompare(b.hora));
+                  const [, , day] = data.split("-");
+                  const total = lista.reduce((s, a) => s + a.valor, 0);
+                  return (
+                    <Card key={data}>
+                      <CardHeader className="pb-3">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <div className="flex items-baseline gap-3">
+                            <span className="font-display text-3xl leading-none text-primary">{day}</span>
+                            <div className="leading-tight">
+                              <div className="font-display text-lg capitalize">{nomeMes}</div>
+                              <div className="text-xs text-muted-foreground font-mono">{y}</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xs text-muted-foreground">
+                              {lista.length} {lista.length === 1 ? "horário" : "horários"}
+                            </div>
+                            <div className="font-mono text-sm">{brl(total)}</div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="divide-y divide-border/60 pt-0">
+                        {lista.map((a) => (
+                          <div key={a.id} className="flex flex-wrap items-center gap-3 py-4">
+                            <div className="min-w-[70px]">
+                              <div className="font-display text-xl">{a.hora}</div>
+                            </div>
+                            <div className="flex-1 min-w-[140px]">
+                              <div className="font-medium">{a.cliente}</div>
+                              <div className="text-xs text-muted-foreground">{a.servico}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-mono">{brl(a.valor)}</div>
+                              <Badge
+                                variant={
+                                  a.status === "concluido"
+                                    ? "default"
+                                    : a.status === "cancelado"
+                                      ? "destructive"
+                                      : "outline"
+                                }
+                                className="text-[10px] mt-1"
+                              >
+                                {a.status}
+                              </Badge>
+                            </div>
+                            <div className="flex gap-1">
+                              {a.status !== "concluido" && (
+                                <Button
+                                  size="icon"
+                                  variant="outline"
+                                  onClick={() => {
+                                    updateStatus(a.id, "concluido");
+                                    toast.success("Marcado como concluído — entrou no caixa");
+                                  }}
+                                  title="Concluir"
+                                >
+                                  <Check className="h-4 w-4" />
+                                </Button>
+                              )}
+                              {a.status !== "cancelado" && (
+                                <Button
+                                  size="icon"
+                                  variant="outline"
+                                  onClick={() => updateStatus(a.id, "cancelado")}
+                                  title="Cancelar"
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              )}
+                              <Button
+                                size="icon"
+                                variant="outline"
+                                onClick={() => remover(a.id)}
+                                title="Remover"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
           );
         })}
       </div>
