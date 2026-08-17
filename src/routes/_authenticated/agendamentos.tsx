@@ -59,9 +59,14 @@ function Page() {
     setItems(items.filter((a) => a.id !== id));
   }
 
-  const ordenados = [...items].sort(
-    (a, b) => (b.data + b.hora).localeCompare(a.data + a.hora),
-  );
+  // Agrupa por data (desc) e ordena horários dentro de cada dia (asc)
+  const porDia = [...items]
+    .sort((a, b) => (b.data + b.hora).localeCompare(a.data + a.hora))
+    .reduce<Record<string, Agendamento[]>>((acc, a) => {
+      (acc[a.data] ??= []).push(a);
+      return acc;
+    }, {});
+  const dias = Object.keys(porDia).sort((x, y) => y.localeCompare(x));
 
   return (
     <>
