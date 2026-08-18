@@ -226,9 +226,15 @@ function Page() {
                             <div className="min-w-[70px]">
                               <div className="font-display text-xl">{a.hora}</div>
                             </div>
+                            <div className="h-10 w-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                              <ServicoIcone servico={a.servico} className="h-5 w-5" />
+                            </div>
                             <div className="flex-1 min-w-[140px]">
                               <div className="font-medium">{a.cliente}</div>
-                              <div className="text-xs text-muted-foreground">{a.servico}</div>
+                              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                                <ServicoIcone servico={a.servico} className="h-3 w-3" />
+                                {a.servico}
+                              </div>
                             </div>
                             <div className="text-right">
                               <div className="font-mono">{brl(a.valor)}</div>
