@@ -24,6 +24,7 @@ import {
 import { PageHeader } from "@/components/app-shell";
 import { useLocalStorage, type Agendamento } from "@/lib/storage";
 import { brl, uid } from "@/lib/format";
+import { ServicoIcone } from "@/lib/category-icons";
 import { Check, Plus, Trash2, X } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/agendamentos")({ component: Page });
