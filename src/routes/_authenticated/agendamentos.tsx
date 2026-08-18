@@ -112,7 +112,12 @@ function Page() {
                       </SelectTrigger>
                       <SelectContent>
                         {servicosPadrao.map((s) => (
-                          <SelectItem key={s} value={s}>{s}</SelectItem>
+                          <SelectItem key={s} value={s}>
+                            <span className="flex items-center gap-2">
+                              <ServicoIcone servico={s} className="h-4 w-4 text-accent" />
+                              {s}
+                            </span>
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
