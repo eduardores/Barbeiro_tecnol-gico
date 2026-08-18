@@ -24,6 +24,7 @@ import {
 import { PageHeader } from "@/components/app-shell";
 import { useLocalStorage, type Agendamento } from "@/lib/storage";
 import { brl, uid } from "@/lib/format";
+import { ServicoIcone } from "@/lib/category-icons";
 import { Check, Plus, Trash2, X } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/agendamentos")({ component: Page });
@@ -112,7 +113,12 @@ function Page() {
                       </SelectTrigger>
                       <SelectContent>
                         {servicosPadrao.map((s) => (
-                          <SelectItem key={s} value={s}>{s}</SelectItem>
+                          <SelectItem key={s} value={s}>
+                            <span className="flex items-center gap-2">
+                              <ServicoIcone servico={s} className="h-4 w-4 text-accent" />
+                              {s}
+                            </span>
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -220,9 +226,15 @@ function Page() {
                             <div className="min-w-[70px]">
                               <div className="font-display text-xl">{a.hora}</div>
                             </div>
+                            <div className="h-10 w-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                              <ServicoIcone servico={a.servico} className="h-5 w-5" />
+                            </div>
                             <div className="flex-1 min-w-[140px]">
                               <div className="font-medium">{a.cliente}</div>
-                              <div className="text-xs text-muted-foreground">{a.servico}</div>
+                              <div className="text-xs text-muted-foreground flex items-center gap-1">
+                                <ServicoIcone servico={a.servico} className="h-3 w-3" />
+                                {a.servico}
+                              </div>
                             </div>
                             <div className="text-right">
                               <div className="font-mono">{brl(a.valor)}</div>
