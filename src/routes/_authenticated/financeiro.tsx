@@ -28,6 +28,7 @@ import {
   type Movimento,
 } from "@/lib/storage";
 import { brl, uid } from "@/lib/format";
+import { CategoriaIcone } from "@/lib/category-icons";
 import { ArrowDownRight, ArrowUpRight, Plus, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/financeiro")({ component: Page });
@@ -135,7 +136,12 @@ function Page() {
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       {categorias.map((c) => (
-                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                        <SelectItem key={c} value={c}>
+                          <span className="flex items-center gap-2">
+                            <CategoriaIcone categoria={c} tipo={form.tipo} className="h-4 w-4 text-accent" />
+                            {c}
+                          </span>
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
