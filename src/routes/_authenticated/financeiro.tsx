@@ -198,17 +198,20 @@ function Page() {
           {ordenados.map((m) => (
             <div key={m.id} className="flex items-center gap-3 py-3">
               <div
-                className={`h-9 w-9 rounded-full flex items-center justify-center ${
+                className={`relative h-10 w-10 rounded-xl flex items-center justify-center ${
                   m.tipo === "entrada"
                     ? "bg-[oklch(0.95_0.05_155)] text-[oklch(0.45_0.15_155)]"
                     : "bg-destructive/10 text-destructive"
                 }`}
               >
-                {m.tipo === "entrada" ? (
-                  <ArrowUpRight className="h-4 w-4" />
-                ) : (
-                  <ArrowDownRight className="h-4 w-4" />
-                )}
+                <CategoriaIcone categoria={m.categoria} tipo={m.tipo} className="h-5 w-5" />
+                <span className="absolute -bottom-1 -right-1 rounded-full bg-card p-[2px]">
+                  {m.tipo === "entrada" ? (
+                    <ArrowUpRight className="h-3 w-3 text-[oklch(0.55_0.15_155)]" />
+                  ) : (
+                    <ArrowDownRight className="h-3 w-3 text-destructive" />
+                  )}
+                </span>
               </div>
               <div className="flex-1">
                 <div className="font-medium">
