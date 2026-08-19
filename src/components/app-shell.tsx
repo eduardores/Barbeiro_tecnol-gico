@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
+import { applyPalette, getSavedPalette } from "@/lib/palettes";
 import { Scissors, CalendarDays, Wallet, Calculator, LayoutDashboard, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -17,6 +19,10 @@ export function AppShell({ children }: { children?: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [config] = useLocalStorage<Config>("config", defaultConfig);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    applyPalette(getSavedPalette());
+  }, []);
 
   async function sair() {
     await supabase.auth.signOut();

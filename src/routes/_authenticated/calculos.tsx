@@ -14,6 +14,7 @@ import {
   type Config,
 } from "@/lib/storage";
 import { brl } from "@/lib/format";
+import { PalettePicker } from "@/components/palette-picker";
 
 export const Route = createFileRoute("/_authenticated/calculos")({ component: Page });
 
