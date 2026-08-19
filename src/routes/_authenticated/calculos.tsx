@@ -85,6 +85,9 @@ function Page() {
         subtitle="Defina o nome da sua empresa e como o lucro é dividido."
       />
 
+      <PalettePicker />
+
+
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="font-display text-xl">Identidade da empresa</CardTitle>
