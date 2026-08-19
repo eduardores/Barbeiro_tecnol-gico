@@ -43,7 +43,7 @@ export function PalettePicker() {
               )}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">{p.nome}</span>
+                <span className="text-sm font-medium text-white">{p.nome}</span>
                 {active && <Check className="h-4 w-4 text-accent" />}
               </div>
               <div className="flex gap-1.5">
