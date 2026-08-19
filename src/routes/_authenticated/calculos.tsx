@@ -14,6 +14,7 @@ import {
   type Config,
 } from "@/lib/storage";
 import { brl } from "@/lib/format";
+import { PalettePicker } from "@/components/palette-picker";
 
 export const Route = createFileRoute("/_authenticated/calculos")({ component: Page });
 
@@ -83,6 +84,9 @@ function Page() {
         title="Cálculos"
         subtitle="Defina o nome da sua empresa e como o lucro é dividido."
       />
+
+      <PalettePicker />
+
 
       <Card className="mb-6">
         <CardHeader>
